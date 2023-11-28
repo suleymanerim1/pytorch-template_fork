@@ -20,3 +20,21 @@ class MnistModel(BaseModel):
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
         return F.log_softmax(x, dim=1)
+
+class Cifar10Model(BaseModel):
+    def __init__(self, num_classes=10):
+        super().__init__()
+        # Create two linear layers
+        self.fc1 = nn.Linear(32*32*3, 100)
+        self.fc2 = nn.Linear(100, num_classes)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        batch_size = x.shape[0]
+        # Flatten x
+        x = x.view(batch_size, -1)
+        x = self.fc1(x)
+        x = self.sigmoid(x)  # Apply sigmoid activation function ([ReLU, Tanh, Identity] are other alternatives)
+        x = self.fc2(x)
+
+        return x
